@@ -3,6 +3,5 @@ set -e
 sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="SventOS"/' /etc/os-release || true
 sed -i 's/^NAME=.*/NAME="SventOS"/' /etc/os-release || true
 sed -i 's#^HOME_URL=.*#HOME_URL="https://zirov.net"#' /etc/os-release || true
-# la live NO usa display manager: arranca a consola y lanza X como instalador
 systemctl set-default multi-user.target || true
 systemctl disable lxdm.service 2>/dev/null || true

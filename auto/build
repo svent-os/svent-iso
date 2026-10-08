@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH:-}"
+if [ "$(id -u)" -ne 0 ]; then
+    printf '%s\n' 'Run the ISO build as root.' >&2
+    exit 1
+fi
+for tool in lb debootstrap; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+        printf 'Required command not found: %s\n' "$tool" >&2
+        exit 1
+    fi
+done
+exec lb build noauto "$@"
