@@ -1,0 +1,28 @@
+---
+componentName: svent
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 820px,540px
+strings:
+    productName: SventOS
+    shortProductName: SventOS
+    version: rolling
+    shortVersion: rolling
+    versionedName: SventOS rolling
+    shortVersionedName: SventOS
+    bootloaderEntryName: SventOS
+    productUrl: https://zirov.net
+    supportUrl: https://zirov.net
+    releaseNotesUrl: https://zirov.net
+images:
+    productLogo: "/usr/share/svent/logo/logo.png"
+    productIcon: "/usr/share/svent/logo/logo.png"
+    productWelcome: "/usr/share/svent/logo/logo.png"
+slideshow: "show.qml"
+slideshowAPI: 2
+style:
+    sidebarBackground: "#0d1b2a"
+    sidebarText: "#e6edf3"
+    sidebarTextSelect: "#e23b3b"
+    sidebarTextCurrent: "#ffffff"

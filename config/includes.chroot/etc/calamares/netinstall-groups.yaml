@@ -1,0 +1,61 @@
+- name: "Desktop Environment"
+  description: "Pick one or both. XFCE is recommended."
+  selected: false
+  hidden: false
+  expanded: true
+  packages: []
+  subgroups:
+    - name: "XFCE"
+      description: "XFCE desktop session"
+      selected: true
+      packages:
+        - svent-xfce
+    - name: "bspwm"
+      description: "bspwm tiling window manager"
+      selected: false
+      packages:
+        - svent-bspwm
+- name: "Pentest Tools"
+  description: "Choose which tool categories to install."
+  selected: false
+  hidden: false
+  expanded: true
+  packages: []
+  subgroups:
+    - name: "Recon"
+      selected: false
+      packages: [ sv-tools-recon ]
+    - name: "Web (includes Burp Suite)"
+      selected: false
+      packages: [ sv-tools-web, sv-burpsuite ]
+    - name: "Active Directory"
+      selected: false
+      packages: [ sv-tools-active-directory ]
+    - name: "Network"
+      selected: false
+      packages: [ sv-tools-network ]
+    - name: "Password Audit"
+      selected: false
+      packages: [ sv-tools-password-audit ]
+    - name: "C2"
+      selected: false
+      packages: [ sv-tools-c2 ]
+    - name: "Exploitation (includes Metasploit)"
+      selected: false
+      packages: [ sv-tools-exploitation ]
+- name: "Extras (optional)"
+  description: "Wordlists and Windows binary armories."
+  selected: false
+  hidden: false
+  expanded: true
+  packages: []
+  subgroups:
+    - name: "Wordlists (SecLists, rockyou)"
+      selected: false
+      packages: [ sv-wordlists ]
+    - name: "Armory - Active Directory (Windows bins)"
+      selected: false
+      packages: [ sv-armory-ad ]
+    - name: "Armory - Network (Windows bins)"
+      selected: false
+      packages: [ sv-armory-network ]

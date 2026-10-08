@@ -1,0 +1,2 @@
+feh --no-fehbg --bg-fill /usr/share/backgrounds/svent/landscape/svent-orca-dark.png &
+(sleep 1; exec calamares) &

@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+debconf-set-selections <<SEL
+krb5-config krb5-config/default_realm string SVENT.LOCAL
+krb5-config krb5-config/add_servers_realm boolean false
+krb5-config krb5-config/read_conf boolean true
+krb5-config krb5-config/kerberos_servers string
+krb5-config krb5-config/admin_server string
+macchanger macchanger/automatically_run boolean false
+wireshark-common wireshark-common/install-setuid boolean true
+sslh sslh/inetd_or_standalone select standalone
+SEL

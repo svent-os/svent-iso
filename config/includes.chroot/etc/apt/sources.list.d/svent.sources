@@ -1,0 +1,5 @@
+Types: deb
+URIs: https://apt.zirov.net
+Suites: rolling
+Components: main
+Signed-By: /usr/share/keyrings/svent-archive-keyring.gpg
