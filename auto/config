@@ -5,7 +5,7 @@ lb config noauto \
   --distribution trixie \
   --architectures amd64 \
   --archive-areas "main contrib non-free non-free-firmware" \
-  --debootstrap-options "--variant=minbase" \
+  --debootstrap-options "--variant=minbase --include=ca-certificates" \
   --apt-recommends false \
   --firmware-chroot false \
   --debian-installer none \
