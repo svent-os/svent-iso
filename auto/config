@@ -6,7 +6,8 @@ lb config noauto \
   --distribution-chroot trixie \
   --distribution-binary trixie \
   --binary-image iso-hybrid \
-  --bootloaders "syslinux grub-efi" \
+  --image-name sventos-live-r3 \
+  --bootloaders "grub-pc grub-efi" \
   --chroot-squashfs-compression-type xz \
   --architectures amd64 \
   --archive-areas "main contrib non-free non-free-firmware" \
@@ -16,8 +17,8 @@ lb config noauto \
   --debian-installer none \
   --win32-loader false \
   --memtest none \
-  --bootappend-live "boot=live components quiet noeject hostname=sventos username=svent-live locales=en_US.UTF-8 live-config.user-default-groups=audio,cdrom,dip,floppy,video,plugdev,netdev,powerdev,scanner,bluetooth,sudo" \
+  --bootappend-live "boot=live components noeject hostname=sventos username=svent-live locales=en_US.UTF-8 live-config.user-default-groups=audio,cdrom,dip,floppy,video,plugdev,netdev,powerdev,scanner,bluetooth,sudo" \
   --iso-application "SventOS" \
-  --iso-volume "SventOS Live" \
+  --iso-volume "SventOS Live R3" \
   --iso-publisher "z1rov" \
   "${@}"

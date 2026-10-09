@@ -11,4 +11,8 @@ for tool in lb debootstrap; do
         exit 1
     fi
 done
+if ! grep -Eq '^LB_BOOTLOADERS="grub-pc grub-efi"$' config/binary; then
+    printf '%s\n' 'Bootloader configuration is stale. Run bash build.sh.' >&2
+    exit 1
+fi
 exec lb build noauto "$@"

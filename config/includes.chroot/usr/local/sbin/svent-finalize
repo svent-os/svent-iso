@@ -3,7 +3,10 @@ set -eu
 test -f /etc/lxdm/lxdm.conf
 sed -i '/^autologin=svent-live$/d; /^session=/d; /^\[base\]$/a session=/usr/bin/startxfce4' /etc/lxdm/lxdm.conf
 systemctl set-default graphical.target
-systemctl enable lxdm.service NetworkManager.service
+printf '%s\n' /usr/sbin/lxdm > /etc/X11/default-display-manager
+ln -sfn /usr/lib/systemd/system/lxdm.service /etc/systemd/system/display-manager.service
+systemctl enable NetworkManager.service
+rm -f /etc/systemd/system/lxdm.service.d/10-svent-live.conf
 rm -f /etc/sudoers.d/svent-live-installer /etc/sudoers.d/live
 rm -f /etc/xdg/autostart/svent-live.desktop /usr/share/applications/svent-install.desktop
 rm -f /usr/local/bin/svent-install /usr/local/bin/svent-live-session

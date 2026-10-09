@@ -1,6 +1,6 @@
 #!/bin/sh
 set -eu
-for package in svent-xfce svent-core svent-artwork svent-boot lxdm firefox-esr network-manager-gnome locales-all libreoffice-writer libreoffice-calc libreoffice-impress torbrowser-launcher vlc gimp; do
+for package in svent-xfce svent-core svent-artwork user-setup lxdm firefox-esr network-manager-gnome locales-all libreoffice-writer libreoffice-calc libreoffice-impress torbrowser-launcher vlc gimp; do
     status=$(dpkg-query -W -f='${Status}' "$package")
     test "$status" = 'install ok installed'
 done
@@ -33,3 +33,8 @@ assert units['units'] and all(unit['action'] == 'enable' for unit in units['unit
 mounts = yaml.safe_load((root / 'mount.conf').read_text())
 assert any(item['mountPoint'] == '/sys/firmware/efi/efivars' and item['efi'] for item in mounts['extraMounts'])
 PY
+test -x /usr/lib/user-setup/user-setup-apply
+test -L /etc/systemd/system/display-manager.service
+test "$(readlink /etc/systemd/system/display-manager.service)" = /usr/lib/systemd/system/lxdm.service
+test -x /etc/grub.d/06_svent_colors
+test -s /etc/default/grub.d/90_svent.cfg

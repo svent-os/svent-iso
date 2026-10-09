@@ -5,7 +5,7 @@ if [ -d /run/live/medium ]; then
     printf '%s\n' 'Run this check after installing and booting from the target disk.' >&2
     exit 1
 fi
-for package in svent-xfce svent-core svent-artwork svent-boot lxdm locales-all firefox-esr libreoffice-writer libreoffice-calc libreoffice-impress vlc gimp torbrowser-launcher; do
+for package in svent-xfce svent-core svent-artwork lxdm locales-all firefox-esr libreoffice-writer libreoffice-calc libreoffice-impress vlc gimp torbrowser-launcher; do
     status=$(dpkg-query -W -f='${Status}' "$package")
     test "$status" = 'install ok installed'
 done
@@ -19,7 +19,10 @@ test -s /usr/share/keyrings/svent-archive-keyring.gpg
 test -f /etc/apt/sources.list.d/svent.sources
 test -s /boot/grub/grub.cfg
 test "$(systemctl get-default)" = graphical.target
-systemctl is-enabled lxdm.service NetworkManager.service >/dev/null
+test "$(readlink /etc/systemd/system/display-manager.service)" = /usr/lib/systemd/system/lxdm.service
+test -s /etc/default/grub.d/90_svent.cfg
+test -x /etc/grub.d/06_svent_colors
+systemctl is-enabled NetworkManager.service >/dev/null
 if grep -q '^autologin=svent-live$' /etc/lxdm/lxdm.conf; then
     printf '%s\n' 'The installed display manager still uses the live account.' >&2
     exit 1

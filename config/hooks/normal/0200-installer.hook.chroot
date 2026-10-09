@@ -5,12 +5,53 @@ test -x /usr/bin/startxfce4
 test -x /usr/bin/calamares
 test -f /etc/lxdm/lxdm.conf
 install -d -m 0755 /usr/share/svent/live
-cp /etc/lxdm/lxdm.conf /usr/share/svent/live/lxdm-installed.conf
-sed -i '/^autologin=/d; /^session=/d; /^\[base\]$/a autologin=svent-live\nsession=/usr/bin/startxfce4' /etc/lxdm/lxdm.conf
+if ! getent passwd svent-live >/dev/null; then
+    useradd --create-home --shell /bin/bash --comment 'SventOS Live' svent-live
+fi
+usermod --shell /bin/bash svent-live
+printf '%s\n' 'svent-live:live' | chpasswd --crypt-method SHA512
+for group in audio cdrom dip floppy video plugdev netdev powerdev scanner bluetooth sudo; do
+    if getent group "$group" >/dev/null; then
+        usermod --append --groups "$group" svent-live
+    fi
+done
+cp -a /etc/skel/. /home/svent-live/
+chown -R svent-live:svent-live /home/svent-live
+chmod 0750 /home/svent-live
+cat > /etc/lxdm/lxdm.conf <<'EOF'
+[base]
+autologin=svent-live
+session=/usr/bin/startxfce4
+greeter=/usr/lib/lxdm/lxdm-greeter-gtk
+
+[server]
+arg=/usr/bin/X -background none -nolisten tcp
+
+[display]
+gtk_theme=Adwaita
+bg=/usr/share/images/desktop-base/desktop-background
+bottom_pane=1
+lang=1
+keyboard=1
+theme=Industrial
+
+[input]
+
+[userlist]
+disable=0
+white=
+black=root
+EOF
 update-alternatives --set x-session-manager /usr/bin/startxfce4
 systemctl set-default graphical.target
-systemctl enable lxdm.service NetworkManager.service cups.service avahi-daemon.service apparmor.service
-chmod 0755 /usr/local/bin/svent-install /usr/local/bin/svent-live-session /usr/local/bin/svent-welcome /usr/local/bin/svent-get-obsidian /usr/local/sbin/svent-finalize
+printf '%s\n' /usr/sbin/lxdm > /etc/X11/default-display-manager
+ln -sfn /usr/lib/systemd/system/lxdm.service /etc/systemd/system/display-manager.service
+install -d -m 0755 /etc/systemd/system/lxdm.service.d
+printf '%s\n' '[Unit]' 'After=live-config.service' > /etc/systemd/system/lxdm.service.d/10-svent-live.conf
+systemctl enable NetworkManager.service cups.service avahi-daemon.service apparmor.service
+test -x /usr/lib/user-setup/user-setup-apply
+chmod 0755 /etc/grub.d/06_svent_colors
+chmod 0755 /usr/local/bin/svent-collect-logs /usr/local/bin/svent-install /usr/local/bin/svent-live-session /usr/local/bin/svent-welcome /usr/local/bin/svent-get-obsidian /usr/local/sbin/svent-finalize
 install -d -m 0755 /etc/sudoers.d
 printf '%s\n' 'svent-live ALL=(root) NOPASSWD: /usr/bin/calamares' > /etc/sudoers.d/svent-live-installer
 chmod 0440 /etc/sudoers.d/svent-live-installer

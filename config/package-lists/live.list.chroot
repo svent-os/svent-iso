@@ -44,7 +44,6 @@ shim-signed
 os-prober
 svent-core
 svent-artwork
-svent-boot
 svent-xfce
 elementary-xfce-icon-theme
 xfce4-appfinder
@@ -116,3 +115,8 @@ ibus-hangul
 ibus-m17n
 xdg-desktop-portal
 xdg-desktop-portal-gtk
+user-setup
+keyboard-configuration
+console-setup
+live-tools
+xserver-xorg-video-vmware
