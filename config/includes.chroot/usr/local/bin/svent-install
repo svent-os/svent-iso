@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+if [ "$(id -u)" -eq 0 ]; then
+    exec /usr/bin/calamares -style fusion "$@"
+fi
+exec sudo -n /usr/bin/calamares -style fusion "$@"

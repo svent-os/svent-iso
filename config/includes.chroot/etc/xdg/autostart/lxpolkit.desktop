@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=SventOS Authentication Agent
+Exec=/usr/bin/lxpolkit
+OnlyShowIn=XFCE;
+NoDisplay=true

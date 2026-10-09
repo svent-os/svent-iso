@@ -1,7 +1,20 @@
 #!/bin/sh
-set -e
-sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="SventOS"/' /etc/os-release || true
-sed -i 's/^NAME=.*/NAME="SventOS"/' /etc/os-release || true
-sed -i 's#^HOME_URL=.*#HOME_URL="https://zirov.net"#' /etc/os-release || true
-systemctl set-default multi-user.target || true
-systemctl disable lxdm.service 2>/dev/null || true
+set -eu
+sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="SventOS"/; s/^NAME=.*/NAME="SventOS"/; s#^HOME_URL=.*#HOME_URL="https://zirov.net"#' /etc/os-release
+test -x /usr/bin/startxfce4
+test -x /usr/bin/calamares
+test -f /etc/lxdm/lxdm.conf
+install -d -m 0755 /usr/share/svent/live
+cp /etc/lxdm/lxdm.conf /usr/share/svent/live/lxdm-installed.conf
+sed -i '/^autologin=/d; /^session=/d; /^\[base\]$/a autologin=svent-live\nsession=/usr/bin/startxfce4' /etc/lxdm/lxdm.conf
+update-alternatives --set x-session-manager /usr/bin/startxfce4
+systemctl set-default graphical.target
+systemctl enable lxdm.service NetworkManager.service cups.service avahi-daemon.service apparmor.service
+chmod 0755 /usr/local/bin/svent-install /usr/local/bin/svent-live-session /usr/local/bin/svent-welcome /usr/local/bin/svent-get-obsidian /usr/local/sbin/svent-finalize
+install -d -m 0755 /etc/sudoers.d
+printf '%s\n' 'svent-live ALL=(root) NOPASSWD: /usr/bin/calamares' > /etc/sudoers.d/svent-live-installer
+chmod 0440 /etc/sudoers.d/svent-live-installer
+visudo -cf /etc/sudoers.d/svent-live-installer
+test -s /etc/ssl/certs/ca-certificates.crt
+rm -f /etc/apt/sources.list.d/svent.list
+test -x /usr/bin/torbrowser-launcher

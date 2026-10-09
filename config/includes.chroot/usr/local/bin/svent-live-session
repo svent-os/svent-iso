@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+test -d /run/live/medium || exit 0
+test "$(id -un)" = svent-live || exit 0
+xdg-user-dirs-update
+desktop=$(xdg-user-dir DESKTOP)
+mkdir -p "$desktop"
+install -m 0755 /usr/share/applications/svent-install.desktop "$desktop/svent-install.desktop"
+gio set "$desktop/svent-install.desktop" metadata::trusted true 2>/dev/null || true
+state="${XDG_RUNTIME_DIR:-/tmp}/svent-installer-started"
+test ! -e "$state" || exit 0
+touch "$state"
+sleep 4
+exec /usr/local/bin/svent-install

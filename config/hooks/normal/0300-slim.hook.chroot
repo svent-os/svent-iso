@@ -1,12 +1,4 @@
 #!/bin/sh
-set -e
-echo "localepurge localepurge/nopurge multiselect en, en_US.UTF-8, es, es_ES.UTF-8" | debconf-set-selections
-echo "localepurge localepurge/use-dpkg-feature boolean true" | debconf-set-selections
-echo "localepurge localepurge/mandelete boolean true" | debconf-set-selections
-echo "localepurge localepurge/dontbothernew boolean false" | debconf-set-selections
-apt-get install -y --no-install-recommends localepurge || true
-localepurge || true
-apt-get autoremove --purge -y || true
+set -eu
 apt-get clean
-rm -rf /usr/share/doc/* /usr/share/info/* /usr/share/man/?? /usr/share/man/??_* 2>/dev/null || true
-rm -rf /var/cache/apt/archives/*.deb 2>/dev/null || true
+rm -f /var/cache/apt/archives/*.deb

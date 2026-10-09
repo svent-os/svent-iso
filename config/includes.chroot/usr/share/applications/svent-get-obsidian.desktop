@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Get Obsidian
+Exec=/usr/local/bin/svent-get-obsidian
+Icon=accessories-text-editor
+Terminal=false
+Categories=Office;
+StartupNotify=true

@@ -1,0 +1,11 @@
+[Configuration]
+FontName=JetBrains Mono 10
+ColorForeground=#e6eaf2
+ColorBackground=#141821
+ColorCursor=#ee5476
+ColorUseTheme=FALSE
+ColorPalette=#141821;#ee5476;#8bd49c;#e5c07b;#82aaff;#c792ea;#89ddff;#b9c1d0;#526079;#ff7597;#a4e5b4;#f5d69a;#a4c1ff;#dcafff;#b1eeff;#ffffff
+MiscMenubarDefault=FALSE
+MiscToolbarDefault=FALSE
+MiscAlwaysShowTabs=FALSE
+ScrollingLines=10000

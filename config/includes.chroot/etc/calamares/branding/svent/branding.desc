@@ -1,9 +1,10 @@
 ---
 componentName: svent
-welcomeStyleCalamares: true
-welcomeExpandingLogo: true
+welcomeStyleCalamares: false
+welcomeExpandingLogo: false
 windowExpanding: normal
-windowSize: 820px,540px
+windowSize: 960px,640px
+windowPlacement: center
 strings:
     productName: SventOS
     shortProductName: SventOS
@@ -22,7 +23,7 @@ images:
 slideshow: "show.qml"
 slideshowAPI: 2
 style:
-    sidebarBackground: "#0d1b2a"
-    sidebarText: "#e6edf3"
-    sidebarTextSelect: "#e23b3b"
-    sidebarTextCurrent: "#ffffff"
+    SidebarBackground: "#141821"
+    SidebarText: "#b9c1d0"
+    SidebarTextCurrent: "#ffffff"
+    SidebarBackgroundCurrent: "#bd3454"

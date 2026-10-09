@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+test -f /etc/lxdm/lxdm.conf
+sed -i '/^autologin=svent-live$/d; /^session=/d; /^\[base\]$/a session=/usr/bin/startxfce4' /etc/lxdm/lxdm.conf
+systemctl set-default graphical.target
+systemctl enable lxdm.service NetworkManager.service
+rm -f /etc/sudoers.d/svent-live-installer /etc/sudoers.d/live
+rm -f /etc/xdg/autostart/svent-live.desktop /usr/share/applications/svent-install.desktop
+rm -f /usr/local/bin/svent-install /usr/local/bin/svent-live-session
+rm -f /etc/systemd/system/getty@tty1.service.d/override.conf
+rm -f /etc/apt/sources.list.d/svent.list
+rm -f /usr/share/svent/live/lxdm-installed.conf
+rm -f /etc/network/interfaces.d/live
+for folder in /home/* /root /etc/skel; do
+    test -d "$folder" || continue
+    find "$folder" -type f -name svent-install.desktop -delete
+done
+update-initramfs -u -k all
+update-grub
+apt-get clean
+rm -f /usr/local/sbin/svent-finalize

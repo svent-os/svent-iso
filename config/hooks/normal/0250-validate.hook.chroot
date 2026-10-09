@@ -1,0 +1,35 @@
+#!/bin/sh
+set -eu
+for package in svent-xfce svent-core svent-artwork svent-boot lxdm firefox-esr network-manager-gnome locales-all libreoffice-writer libreoffice-calc libreoffice-impress torbrowser-launcher vlc gimp; do
+    status=$(dpkg-query -W -f='${Status}' "$package")
+    test "$status" = 'install ok installed'
+done
+for command in startxfce4 calamares nm-applet xfce4-terminal thunar libreoffice torbrowser-launcher; do
+    command -v "$command" >/dev/null
+done
+locale -a | grep -qi '^en_US\.utf8$'
+locale -a | grep -qi '^es_ES\.utf8$'
+locale -a | grep -qi '^ja_JP\.utf8$'
+python3 - <<'PY'
+import pathlib
+import yaml
+root = pathlib.Path('/etc/calamares')
+for path in root.rglob('*'):
+    if path.suffix in ('.conf', '.yaml', '.desc'):
+        yaml.safe_load(path.read_text())
+settings = yaml.safe_load((root / 'settings.conf').read_text())
+assert all('netinstall' not in stage for group in settings['sequence'] for stage in group.values())
+welcome = yaml.safe_load((root / 'modules/welcome.conf').read_text())
+assert 'internet' not in welcome['requirements']['required']
+PY
+python3 - <<'PY'
+from pathlib import Path
+import yaml
+root = Path('/etc/calamares/modules')
+users = yaml.safe_load((root / 'users.conf').read_text())
+assert 'svent-live' in users['user']['forbidden_names']
+units = yaml.safe_load((root / 'services-systemd.conf').read_text())
+assert units['units'] and all(unit['action'] == 'enable' for unit in units['units'])
+mounts = yaml.safe_load((root / 'mount.conf').read_text())
+assert any(item['mountPoint'] == '/sys/firmware/efi/efivars' and item['efi'] for item in mounts['extraMounts'])
+PY

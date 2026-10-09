@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Welcome to SventOS
+Exec=/usr/local/bin/svent-welcome
+Icon=/usr/share/svent/logo/logo.png
+Terminal=false
+Categories=System;
+StartupNotify=true

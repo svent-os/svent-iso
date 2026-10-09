@@ -1,0 +1,3 @@
+#!/bin/sh
+set -eu
+exec xdg-open /usr/share/svent/welcome/index.html

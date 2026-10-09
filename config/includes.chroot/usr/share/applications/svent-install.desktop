@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Install SventOS
+Exec=/usr/local/bin/svent-install
+Icon=/usr/share/svent/logo/logo.png
+Terminal=false
+Categories=System;
+StartupNotify=true
