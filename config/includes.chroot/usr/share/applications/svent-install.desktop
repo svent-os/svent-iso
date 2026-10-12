@@ -2,7 +2,7 @@
 Type=Application
 Name=Install SventOS
 Exec=/usr/local/bin/svent-install
-Icon=/usr/share/svent/logo/logo.png
+Icon=/etc/calamares/branding/svent/logo.png
 Terminal=false
 StartupNotify=false
 Categories=System;

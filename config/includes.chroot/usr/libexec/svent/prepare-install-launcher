@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 import hashlib
+import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import time
 
 
@@ -34,5 +36,35 @@ def prepare():
     raise RuntimeError('Installer launcher trust could not be verified.')
 
 
+def autostart():
+    if not Path('/run/live/medium').is_dir() or not os.environ.get('DISPLAY'):
+        return
+    runtime = Path(os.environ.get('XDG_RUNTIME_DIR', '/run/user/' + str(os.getuid())))
+    if not runtime.is_dir():
+        raise RuntimeError('The desktop runtime directory is unavailable.')
+    marker = runtime / 'svent-installer-autostart'
+    if marker.exists():
+        return
+    for attempt in range(50):
+        result = subprocess.run(['pgrep', '-u', str(os.getuid()), '-x', 'xfdesktop'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+        if result.returncode == 0:
+            break
+        time.sleep(0.2)
+    else:
+        raise RuntimeError('The live desktop is not ready.')
+    try:
+        with marker.open('x') as output:
+            output.write('Installer started automatically for this live boot\n')
+    except FileExistsError:
+        return
+    try:
+        subprocess.Popen(['/usr/local/bin/svent-install'], start_new_session=True)
+    except OSError:
+        marker.unlink()
+        raise
+
+
 if __name__ == '__main__':
     prepare()
+    if '--autostart' in sys.argv:
+        autostart()

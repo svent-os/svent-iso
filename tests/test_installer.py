@@ -139,8 +139,9 @@ class InstallerTests(unittest.TestCase):
         self.assertIn('packagechooserq@boot', settings['sequence'][0]['show'])
         choice = yaml.safe_load((config / 'modules/boot.conf').read_text())
         self.assertEqual(choice['packageChoice'], 'grub')
-        self.assertTrue((config / 'branding/svent' / choice['qmlFilename']).is_file())
-        for name in ['welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'check.png', 'partial.png', 'radio.png']:
+        self.assertFalse(choice['qmlFilename'].endswith('.qml'))
+        self.assertTrue((config / 'branding/svent' / (choice['qmlFilename'] + '.qml')).is_file())
+        for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'check.png', 'partial.png', 'radio.png']:
             self.assertTrue((config / 'branding/svent' / name).read_bytes().startswith(b'\x89PNG\r\n\x1a\n'))
 
     def test_tool_rows_have_no_visible_package_child(self):
@@ -153,6 +154,42 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue(payload['selected'])
             self.assertEqual(payload['packages'], ['sv-example'])
             self.assertEqual(payload['hidden'] and payload['selected'] and item['selected'], selected)
+
+    def test_live_installer_autostarts_only_once(self):
+        helper = load(INCLUDE / 'usr/libexec/svent/prepare-install-launcher', 'autostart_test')
+        root = self.directory()
+        live = root / 'live'
+        live.mkdir()
+        runtime = root / 'runtime'
+        runtime.mkdir()
+        def mapped(value):
+            return live if str(value) == '/run/live/medium' else Path(value)
+        with patch.object(helper, 'Path', side_effect=mapped), patch.dict(helper.os.environ, {'DISPLAY': ':0', 'XDG_RUNTIME_DIR': str(runtime)}), patch.object(helper.os, 'getuid', return_value=1000, create=True), patch.object(helper.subprocess, 'run', return_value=types.SimpleNamespace(returncode=0)), patch.object(helper.subprocess, 'Popen') as spawn:
+            helper.autostart()
+            helper.autostart()
+        spawn.assert_called_once_with(['/usr/local/bin/svent-install'], start_new_session=True)
+        self.assertTrue((runtime / 'svent-installer-autostart').is_file())
+
+    def test_installed_system_does_not_autostart_installer(self):
+        helper = load(INCLUDE / 'usr/libexec/svent/prepare-install-launcher', 'installed_autostart_test')
+        root = self.directory()
+        with patch.object(helper, 'Path', return_value=root / 'missing-live'), patch.object(helper.subprocess, 'Popen') as spawn:
+            helper.autostart()
+        spawn.assert_not_called()
+
+    def test_autostart_failed_spawn_can_be_retried(self):
+        helper = load(INCLUDE / 'usr/libexec/svent/prepare-install-launcher', 'retry_autostart_test')
+        root = self.directory()
+        live = root / 'live'
+        live.mkdir()
+        runtime = root / 'runtime'
+        runtime.mkdir()
+        def mapped(value):
+            return live if str(value) == '/run/live/medium' else Path(value)
+        with patch.object(helper, 'Path', side_effect=mapped), patch.dict(helper.os.environ, {'DISPLAY': ':0', 'XDG_RUNTIME_DIR': str(runtime)}), patch.object(helper.os, 'getuid', return_value=1000, create=True), patch.object(helper.subprocess, 'run', return_value=types.SimpleNamespace(returncode=0)), patch.object(helper.subprocess, 'Popen', side_effect=OSError('Launch failed')):
+            with self.assertRaises(OSError):
+                helper.autostart()
+        self.assertFalse((runtime / 'svent-installer-autostart').exists())
 
     def test_dependency_failure_stops_before_partitioning(self):
         root = self.directory()

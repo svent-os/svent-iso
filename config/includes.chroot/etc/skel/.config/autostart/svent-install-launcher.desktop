@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=Prepare Installer Launcher
-Exec=/usr/libexec/svent/prepare-install-launcher
+Name=Start SventOS Installer
+Exec=/usr/libexec/svent/prepare-install-launcher --autostart
 OnlyShowIn=XFCE;
 NoDisplay=true
 StartupNotify=false

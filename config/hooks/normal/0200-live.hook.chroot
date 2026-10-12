@@ -12,8 +12,7 @@ if ! id svent-live >/dev/null 2>&1; then
 fi
 printf '%s\n' 'svent-live:live' | chpasswd
 cp -a /etc/skel/. /home/svent-live/
-test -s /usr/share/svent/logo/logo.png
-cp /usr/share/svent/logo/logo.png /etc/calamares/branding/svent/logo.png
+test -s /etc/calamares/branding/svent/logo.png
 mkdir -p /home/svent-live/Desktop
 install -m 0755 /usr/share/applications/svent-install.desktop /home/svent-live/Desktop/svent-install.desktop
 chmod 0755 /usr/libexec/svent/prepare-install-launcher
@@ -34,7 +33,7 @@ for name in ['welcome', 'locale', 'keyboard', 'packagechooser', 'packagechooserq
 for path in [Path('/usr/local/bin/svent-install'), config / 'modules/sventinstall/main.py']:
     ast.parse(path.read_text())
 json.loads(Path('/usr/share/svent/installer/descriptions.json').read_text())
-for name in ['welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'show.qml', 'bootloader.qml', 'check.png', 'partial.png', 'radio.png']:
+for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'show.qml', 'bootloader.qml', 'check.png', 'partial.png', 'radio.png']:
     assert (config / 'branding/svent' / name).is_file(), name
 PY
 python3 - <<'PY'
