@@ -1,12 +1,12 @@
 componentName: svent
-slideshow: []
+slideshow: show.qml
 welcomeStyleCalamares: false
 welcomeExpandingLogo: false
 windowExpanding: noexpand
 windowSize: 960px,600px
 windowPlacement: center
 sidebar: widget
-navigation: none
+navigation: widget
 strings:
   productName: SventOS
   shortProductName: SventOS
@@ -19,12 +19,14 @@ strings:
   supportUrl: https://discord.gg/4nnsYWjbUk
   knownIssuesUrl: https://github.com/svent-os/svent-iso/issues
   releaseNotesUrl: https://github.com/svent-os
-  donateUrl: ""
+  donateUrl: ''
 images:
   productIcon: logo.png
   productLogo: logo.png
+  productWelcome: welcome-image.png
 style:
-  SidebarBackground: "#181d23"
-  SidebarText: "#d9dce2"
-  SidebarBackgroundCurrent: "#b82d50"
-  SidebarTextCurrent: "#ffffff"
+  SidebarBackground: '#181d23'
+  SidebarText: '#d9dce2'
+  SidebarBackgroundCurrent: '#b82d50'
+  SidebarTextCurrent: '#ffffff'
+slideshowAPI: 1

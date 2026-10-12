@@ -19,3 +19,6 @@ config/bootstrap.*
 config/common.*
 .build.lock
 *.sha256
+__pycache__/
+*.pyc
+.installer-test-*/

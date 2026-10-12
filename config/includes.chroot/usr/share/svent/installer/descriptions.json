@@ -1,0 +1,518 @@
+{
+  "sv-adidnsdump": {
+    "name": "adidnsdump",
+    "description": "Integrated AD DNS zone dumper"
+  },
+  "sv-armory-ad": {
+    "name": "Active Directory Armory",
+    "description": "Verified Windows utilities for Active Directory assessment."
+  },
+  "sv-bloodhound-py": {
+    "name": "bloodhound-py",
+    "description": "BloodHound CE data collector (Python)"
+  },
+  "sv-bloodyad": {
+    "name": "bloodyad",
+    "description": "AD privilege escalation framework"
+  },
+  "sv-certipy": {
+    "name": "certipy",
+    "description": "AD Certificate Services enumeration and abuse"
+  },
+  "sv-coercer": {
+    "name": "coercer",
+    "description": "Coerce Windows authentication"
+  },
+  "sv-dfscoerce": {
+    "name": "dfscoerce",
+    "description": "MS-DFSNM coercion (DFSCoerce)"
+  },
+  "sv-donpapi": {
+    "name": "donpapi",
+    "description": "Remote Windows secrets collection and analysis"
+  },
+  "sv-enum4linux": {
+    "name": "enum4linux",
+    "description": "SMB/AD enumeration (Perl)"
+  },
+  "sv-enum4linux-ng": {
+    "name": "enum4linux-ng",
+    "description": "Next-gen SMB/AD enumeration"
+  },
+  "sv-evil-winrm": {
+    "name": "evil-winrm",
+    "description": "WinRM shell for pentesting"
+  },
+  "sv-evil-winrm-py": {
+    "name": "evil-winrm-py",
+    "description": "WinRM shell (Python port)"
+  },
+  "freerdp3-x11": {
+    "name": "freerdp",
+    "description": "Remote Desktop Protocol (RDP) client"
+  },
+  "sv-gmsadumper": {
+    "name": "gmsadumper",
+    "description": "Dump gMSA managed passwords"
+  },
+  "sv-godap": {
+    "name": "godap",
+    "description": "Interactive TUI for LDAP"
+  },
+  "sv-goldencopy": {
+    "name": "goldencopy",
+    "description": "Copy golden/silver ticket parameters"
+  },
+  "sv-gosecretsdump": {
+    "name": "gosecretsdump",
+    "description": "Fast NTDS.dit secrets dumper (Go)"
+  },
+  "sv-gpp-decrypt": {
+    "name": "gpp-decrypt",
+    "description": "Decrypt Group Policy Preferences passwords"
+  },
+  "sv-impacket": {
+    "name": "impacket",
+    "description": "Impacket full toolkit (all example scripts as impacket-*)"
+  },
+  "krb5-user": {
+    "name": "kerberos",
+    "description": "Kerberos client utilities (kinit, klist, kvno)"
+  },
+  "sv-kerbrute": {
+    "name": "kerbrute",
+    "description": "Kerberos pre-auth username/password bruteforcer"
+  },
+  "sv-krbrelayx": {
+    "name": "krbrelayx",
+    "description": "Kerberos relaying / delegation abuse"
+  },
+  "python3-ldapdomaindump": {
+    "name": "ldapdomaindump",
+    "description": "Active Directory information dumper via LDAP"
+  },
+  "ldap-utils": {
+    "name": "ldapsearch",
+    "description": "LDAP and Active Directory query tool"
+  },
+  "sv-ldeep": {
+    "name": "ldeep",
+    "description": "In-depth LDAP enumeration"
+  },
+  "sv-manspider": {
+    "name": "manspider",
+    "description": "Crawl SMB shares for sensitive files"
+  },
+  "sv-mitm6": {
+    "name": "mitm6",
+    "description": "IPv6 DNS takeover (mitm6)"
+  },
+  "nbtscan": {
+    "name": "nbtscan",
+    "description": "NetBIOS name network scanner"
+  },
+  "sv-netexec": {
+    "name": "netexec",
+    "description": "Network service exploitation framework (CrackMapExec successor)"
+  },
+  "sv-nopac": {
+    "name": "nopac",
+    "description": "noPac (CVE-2021-42278/42287)"
+  },
+  "onesixtyone": {
+    "name": "onesixtyone",
+    "description": "Fast SNMP community string scanner"
+  },
+  "sv-pcredz": {
+    "name": "pcredz",
+    "description": "Extract credentials from pcap/live traffic"
+  },
+  "sv-petitpotam": {
+    "name": "petitpotam",
+    "description": "MS-EFSRPC coercion (PetitPotam)"
+  },
+  "sv-pkinittools": {
+    "name": "pkinittools",
+    "description": "PKINIT / cert-based Kerberos tools"
+  },
+  "sv-powerview": {
+    "name": "powerview",
+    "description": "PowerView for Linux (Python)"
+  },
+  "proxychains4": {
+    "name": "proxychains",
+    "description": "Force TCP connections through proxies"
+  },
+  "sv-pypykatz": {
+    "name": "pypykatz",
+    "description": "Mimikatz functionality in pure Python"
+  },
+  "sv-pywerview": {
+    "name": "pywerview",
+    "description": "PowerView-like AD recon (Python)"
+  },
+  "sv-pywhisker": {
+    "name": "pywhisker",
+    "description": "Shadow Credentials (msDS-KeyCredentialLink)"
+  },
+  "sv-responder": {
+    "name": "responder",
+    "description": "LLMNR/NBT-NS/MDNS poisoner"
+  },
+  "sv-roadrecon": {
+    "name": "roadrecon",
+    "description": "Azure AD (Entra) recon tool"
+  },
+  "samba": {
+    "name": "samba",
+    "description": "Samba SMB/CIFS server"
+  },
+  "samba-common-bin": {
+    "name": "samba-common",
+    "description": "Samba net administration utility"
+  },
+  "samdump2": {
+    "name": "samdump2",
+    "description": "Dump password hashes from Windows SAM"
+  },
+  "sv-shadowcoerce": {
+    "name": "shadowcoerce",
+    "description": "MS-FSRVP coercion (ShadowCoerce)"
+  },
+  "smbclient": {
+    "name": "smbclient",
+    "description": "SMB/CIFS client for file shares"
+  },
+  "sv-smbmap": {
+    "name": "smbmap",
+    "description": "SMB share enumeration tool"
+  },
+  "sv-sprayhound": {
+    "name": "sprayhound",
+    "description": "AD password spraying with BloodHound"
+  },
+  "sv-targetedkerberoast": {
+    "name": "targetedkerberoast",
+    "description": "Targeted Kerberoasting"
+  },
+  "sv-windapsearch": {
+    "name": "windapsearch",
+    "description": "LDAP AD enumeration"
+  },
+  "sv-zerologon-scan": {
+    "name": "zerologon-scan",
+    "description": "Zerologon (CVE-2020-1472) scanner"
+  },
+  "sv-amass": {
+    "name": "amass",
+    "description": "In-depth attack surface mapping and asset discovery"
+  },
+  "arp-scan": {
+    "name": "arp-scan",
+    "description": "ARP discovery and fingerprinting of hosts on the local network"
+  },
+  "arping": {
+    "name": "arping",
+    "description": "ARP-level ping and host discovery"
+  },
+  "sv-asnmap": {
+    "name": "asnmap",
+    "description": "Map IP ranges by ASN"
+  },
+  "sv-assetfinder": {
+    "name": "assetfinder",
+    "description": "Find domains and subdomains"
+  },
+  "bind9-dnsutils": {
+    "name": "dig",
+    "description": "DNS lookup utility (dig)"
+  },
+  "dnsenum": {
+    "name": "dnsenum",
+    "description": "DNS enumeration and domain information gathering"
+  },
+  "dnsrecon": {
+    "name": "dnsrecon",
+    "description": "DNS enumeration and reconnaissance tool"
+  },
+  "sv-dnsx": {
+    "name": "dnsx",
+    "description": "Fast and multi-purpose DNS toolkit"
+  },
+  "fierce": {
+    "name": "fierce",
+    "description": "DNS reconnaissance and enumeration tool"
+  },
+  "fping": {
+    "name": "fping",
+    "description": "Fast multi-host ping sweep"
+  },
+  "hping3": {
+    "name": "hping3",
+    "description": "TCP/IP packet assembler and analyzer"
+  },
+  "sv-httpx": {
+    "name": "httpx",
+    "description": "Fast and multi-purpose HTTP toolkit"
+  },
+  "sv-katana": {
+    "name": "katana",
+    "description": "Next-generation crawling and spidering"
+  },
+  "sv-mapcidr": {
+    "name": "mapcidr",
+    "description": "CIDR and IP range operations"
+  },
+  "masscan": {
+    "name": "masscan",
+    "description": "Fast asynchronous TCP port scanner"
+  },
+  "sv-massdns": {
+    "name": "massdns",
+    "description": "High-performance DNS stub resolver"
+  },
+  "sv-naabu": {
+    "name": "naabu",
+    "description": "Fast port scanner"
+  },
+  "netdiscover": {
+    "name": "netdiscover",
+    "description": "Active and passive ARP host discovery"
+  },
+  "nmap": {
+    "name": "nmap",
+    "description": "Network scanner and service detector"
+  },
+  "sv-puredns": {
+    "name": "puredns",
+    "description": "Fast domain resolver and subdomain bruteforcer"
+  },
+  "sv-rustscan": {
+    "name": "rustscan",
+    "description": "Fast modern port scanner"
+  },
+  "sv-shuffledns": {
+    "name": "shuffledns",
+    "description": "Massdns wrapper for subdomain resolution"
+  },
+  "sv-subfinder": {
+    "name": "subfinder",
+    "description": "Subdomain discovery tool"
+  },
+  "sv-uncover": {
+    "name": "uncover",
+    "description": "Discover exposed hosts via search engines"
+  },
+  "whois": {
+    "name": "whois",
+    "description": "WHOIS domain and IP lookup"
+  },
+  "zmap": {
+    "name": "zmap",
+    "description": "Fast network scanner for large-scale network research"
+  },
+  "sv-burpsuite": {
+    "name": "burpsuite",
+    "description": "Burp Suite Community web security testing suite"
+  },
+  "sv-commix": {
+    "name": "commix",
+    "description": "Automated OS command injection exploiter"
+  },
+  "sv-dalfox": {
+    "name": "dalfox",
+    "description": "XSS scanning and parameter analysis tool"
+  },
+  "dirb": {
+    "name": "dirb",
+    "description": "Web content discovery tool"
+  },
+  "sv-feroxbuster": {
+    "name": "feroxbuster",
+    "description": "Fast content discovery and directory brute-forcer"
+  },
+  "ffuf": {
+    "name": "ffuf",
+    "description": "Fast web fuzzer"
+  },
+  "sv-gau": {
+    "name": "gau",
+    "description": "Fetch known URLs from public sources"
+  },
+  "gobuster": {
+    "name": "gobuster",
+    "description": "Directory, DNS and vhost brute-forcing tool"
+  },
+  "sv-hakrawler": {
+    "name": "hakrawler",
+    "description": "Fast web crawler for endpoint discovery"
+  },
+  "sv-nikto": {
+    "name": "nikto",
+    "description": "Web server vulnerability scanner"
+  },
+  "sv-nuclei": {
+    "name": "nuclei",
+    "description": "Template-based vulnerability scanner"
+  },
+  "sqlmap": {
+    "name": "sqlmap",
+    "description": "SQL injection detection and exploitation tool"
+  },
+  "wafw00f": {
+    "name": "wafw00f",
+    "description": "Web application firewall fingerprinting tool"
+  },
+  "sv-wapiti": {
+    "name": "wapiti",
+    "description": "Web application vulnerability scanner"
+  },
+  "sv-waybackurls": {
+    "name": "waybackurls",
+    "description": "Fetch archived URLs from the Wayback Machine"
+  },
+  "wfuzz": {
+    "name": "wfuzz",
+    "description": "Web application fuzzer"
+  },
+  "whatweb": {
+    "name": "whatweb",
+    "description": "Web technology fingerprinting tool"
+  },
+  "sv-wpscan": {
+    "name": "wpscan",
+    "description": "WordPress security scanner"
+  },
+  "sv-armory-network": {
+    "name": "Network Armory",
+    "description": "Verified Windows utilities for network assessment."
+  },
+  "sv-bettercap": {
+    "name": "bettercap",
+    "description": "Network assessment framework"
+  },
+  "sv-chisel": {
+    "name": "chisel",
+    "description": "Fast TCP and UDP tunnel over HTTP"
+  },
+  "sv-dsniff": {
+    "name": "dsniff",
+    "description": "Network traffic analysis utilities"
+  },
+  "sv-ettercap": {
+    "name": "ettercap",
+    "description": "Network traffic assessment suite"
+  },
+  "sv-iodine": {
+    "name": "iodine",
+    "description": "IPv4 tunneling over DNS"
+  },
+  "sv-ligolo-ng": {
+    "name": "ligolo-ng",
+    "description": "Ligolo-ng tunneling proxy"
+  },
+  "sv-macchanger": {
+    "name": "macchanger",
+    "description": "MAC address inspection and configuration"
+  },
+  "sv-netcat": {
+    "name": "netcat",
+    "description": "TCP and UDP connection utility"
+  },
+  "sv-penelope": {
+    "name": "penelope",
+    "description": "Interactive shell handler"
+  },
+  "sv-socat": {
+    "name": "socat",
+    "description": "Multipurpose bidirectional data relay"
+  },
+  "sv-sshuttle": {
+    "name": "sshuttle",
+    "description": "Transparent proxy over SSH"
+  },
+  "sv-tcpdump": {
+    "name": "tcpdump",
+    "description": "Command-line packet analyzer"
+  },
+  "sv-tcpflow": {
+    "name": "tcpflow",
+    "description": "TCP stream capture and reconstruction"
+  },
+  "sv-tshark": {
+    "name": "tshark",
+    "description": "Wireshark command-line protocol analyzer"
+  },
+  "sv-cewl": {
+    "name": "CeWL",
+    "description": "Build wordlists from text collected on websites."
+  },
+  "sv-crunch": {
+    "name": "Crunch",
+    "description": "Generate wordlists using character sets and patterns."
+  },
+  "sv-hash-identifier": {
+    "name": "Hash Identifier",
+    "description": "Identify potential hash formats."
+  },
+  "sv-hashcat": {
+    "name": "hashcat",
+    "description": "Advanced GPU/CPU password recovery"
+  },
+  "sv-hashid": {
+    "name": "HashID",
+    "description": "Recognize hash types and compatible cracking modes."
+  },
+  "sv-hydra": {
+    "name": "hydra",
+    "description": "Network login auditor"
+  },
+  "sv-john": {
+    "name": "john",
+    "description": "John the Ripper (jumbo, compiled from source) with all *2john helpers"
+  },
+  "sv-medusa": {
+    "name": "medusa",
+    "description": "Parallel network login brute-forcer"
+  },
+  "sv-name-that-hash": {
+    "name": "Name That Hash",
+    "description": "Identify hashes with contextual format information."
+  },
+  "sv-ncrack": {
+    "name": "ncrack",
+    "description": "High-speed network authentication cracker"
+  },
+  "sv-wordlists": {
+    "name": "Wordlists",
+    "description": "Install curated dictionaries for password auditing."
+  },
+  "sv-havoc": {
+    "name": "Havoc",
+    "description": "Command and control framework with an operator client and teamserver."
+  },
+  "sv-mythic": {
+    "name": "Mythic",
+    "description": "Extensible command and control platform with a web interface."
+  },
+  "sv-sliver": {
+    "name": "Sliver",
+    "description": "Command and control framework with multiplayer operator support."
+  },
+  "sv-donut": {
+    "name": "donut",
+    "description": "Donut native C executable"
+  },
+  "sv-exploitdb": {
+    "name": "exploitdb",
+    "description": "Pinned Exploit-DB collection downloader"
+  },
+  "sv-metasploit": {
+    "name": "metasploit",
+    "description": "Official Metasploit Framework installer integration"
+  },
+  "sv-unicorn": {
+    "name": "unicorn",
+    "description": "Magic Unicorn standalone Python tool"
+  }
+}
