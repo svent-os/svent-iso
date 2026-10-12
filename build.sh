@@ -3,12 +3,13 @@ set -euo pipefail
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH:-}"
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 test "$(id -u)" -eq 0 || { printf '%s\n' 'Run this script as root.' >&2; exit 1; }
-for command in lb debootstrap xorriso mksquashfs unsquashfs python3 sha256sum flock; do
+for command in lb debootstrap xorriso mksquashfs unsquashfs python3 sha256sum flock grub-script-check; do
     command -v "$command" >/dev/null
 done
 exec 9>.build.lock
 flock -n 9 || { printf '%s\n' 'Another build is running.' >&2; exit 1; }
 bash -n build.sh
+grub-script-check config/bootloaders/grub-pc/grub.cfg
 sh -n auto/config config/hooks/normal/0200-live.hook.chroot
 python3 -c 'import ast; from pathlib import Path; ast.parse(Path("config/includes.chroot/usr/libexec/svent/prepare-live-shutdown").read_text())'
 free=$(df -Pk . | awk 'NR == 2 {print $4}')
@@ -21,6 +22,14 @@ lb config
 lb build 2>&1 | tee build.log
 iso=sventos-live-amd64.hybrid.iso
 test -s "$iso"
+grub-script-check binary/boot/grub/grub.cfg
+test "$(grep -c '^menuentry ' binary/boot/grub/grub.cfg)" -eq 2
+grep -q '^set menu_color_normal=light-red/black$' binary/boot/grub/grub.cfg
+grep -q '^set menu_color_highlight=white/red$' binary/boot/grub/grub.cfg
+if grep -Eq '@(KERNEL_LIVE|INITRD_LIVE|APPEND_LIVE)@' binary/boot/grub/grub.cfg; then
+    printf '%s\n' 'Unresolved GRUB boot parameters.' >&2
+    exit 1
+fi
 test -s binary/live/filesystem.squashfs
 unsquashfs -cat binary/live/filesystem.squashfs etc/passwd | grep -q '^svent-live:'
 unsquashfs -cat binary/live/filesystem.squashfs etc/lxdm/lxdm.conf | grep -Eq '^autologin[[:space:]]*=[[:space:]]*svent-live$'
