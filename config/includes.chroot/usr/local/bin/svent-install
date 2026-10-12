@@ -111,7 +111,7 @@ def generate(cache, descriptions, vm):
     for package, name, description in BASE:
         if package != 'obsidian':
             candidate(cache, package)
-        base.append({'name': name, 'description': description, 'selected': True, 'packages': [package]})
+        base.append(tool_item(package, name, description, True))
     groups.append({'name': 'Desktop Base', 'description': 'Everyday applications, VPN and command-line utilities.', 'selected': True, 'subgroups': base})
     metadata = {'mandatory': MANDATORY, 'base': [p for p, _, _ in BASE], 'categories': {}, 'virtualization': vm}
     for category, title, description in categories(cache):
@@ -123,9 +123,14 @@ def generate(cache, descriptions, vm):
             version = candidate(cache, package)
             data = descriptions.get(package, {})
             summary = re.sub(r'^Svent\s+.*?\btool:\s*', '', version.summary, flags=re.I)
-            items.append({'name': data.get('name', package.removeprefix('sv-')), 'description': data.get('description', summary), 'selected': False, 'packages': [package]})
+            items.append(tool_item(package, data.get('name', package.removeprefix('sv-')), data.get('description', summary), False))
         groups.append({'name': title, 'description': description, 'selected': False, 'subgroups': items})
     return groups, metadata
+
+
+def tool_item(package, name, description, selected):
+    return {'name': name, 'description': description, 'selected': selected,
+            'subgroups': [{'name': package, 'hidden': True, 'selected': True, 'packages': [package]}]}
 
 
 def main():
@@ -162,8 +167,9 @@ def main():
     progress.terminate()
     progress.wait()
     os.environ['QT_QPA_PLATFORM'] = 'xcb'
+    os.environ['QT_QUICK_BACKEND'] = 'software'
     with Path('/var/log/svent-calamares.log').open('w') as log:
-        return subprocess.call(['/usr/bin/calamares', '-d', '-style', 'fusion'], stdout=log, stderr=subprocess.STDOUT)
+        return subprocess.call(['/usr/bin/calamares', '-style', 'fusion'], stdout=log, stderr=subprocess.STDOUT)
 
 
 if __name__ == '__main__':

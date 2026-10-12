@@ -1,14 +1,17 @@
-QWidget { color: #e5e8ee; background-color: #202531; }
+QWidget { color: #e5e8ee; background-color: #202531; font-size: 13px; }
+QWidget#sidebarApp { min-width: 160px; max-width: 180px; background-color: #181d23; }
+QListView#sidebarMenuApp { border: none; border-radius: 0; background-color: #181d23; }
+QWidget#sidebarApp QPushButton { padding: 6px; }
 QLineEdit, QComboBox, QTreeView, QListView, QTextEdit, QPlainTextEdit { background-color: #151a22; border: 1px solid #566173; border-radius: 3px; selection-background-color: #b82d50; selection-color: white; }
 QHeaderView::section { background-color: #303744; color: #e5e8ee; padding: 4px; border: 1px solid #566173; }
 QPushButton { background-color: #303848; border: 1px solid #566173; border-radius: 4px; padding: 6px 12px; }
 QPushButton:hover { background-color: #424c5e; }
 QPushButton:disabled { color: #7b8594; background-color: #252c38; }
 QCheckBox::indicator, QTreeView::indicator { width: 14px; height: 14px; background-color: white; border: 1px solid #aeb7c5; border-radius: 2px; }
-QCheckBox::indicator:checked, QTreeView::indicator:checked { image: url(/etc/calamares/branding/svent/check.svg); }
-QCheckBox::indicator:indeterminate, QTreeView::indicator:indeterminate { image: url(/etc/calamares/branding/svent/partial.svg); }
+QCheckBox::indicator:checked, QTreeView::indicator:checked { image: url(/etc/calamares/branding/svent/check.png); }
+QCheckBox::indicator:indeterminate, QTreeView::indicator:indeterminate { image: url(/etc/calamares/branding/svent/partial.png); }
 QRadioButton::indicator { width: 14px; height: 14px; background-color: white; border: 1px solid #aeb7c5; border-radius: 8px; }
-QRadioButton::indicator:checked { image: url(/etc/calamares/branding/svent/radio.svg); }
+QRadioButton::indicator:checked { image: url(/etc/calamares/branding/svent/radio.png); }
 QProgressBar { border: 1px solid #566173; border-radius: 4px; text-align: center; background-color: #151a22; }
 QProgressBar::chunk { background-color: #b82d50; }
 QScrollBar:vertical { background-color: #151a22; width: 12px; }

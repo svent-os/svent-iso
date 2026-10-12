@@ -1,7 +1,7 @@
 componentName: svent
 slideshow: show.qml
 welcomeStyleCalamares: false
-welcomeExpandingLogo: false
+welcomeExpandingLogo: true
 windowExpanding: noexpand
 windowSize: 960px,600px
 windowPlacement: center

@@ -135,8 +135,24 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(boot['efiBootLoaderVar'], 'packagechooser_boot')
         self.assertIn('svent-live', users['user']['forbidden_names'])
         self.assertEqual(branding['windowSize'], '960px,600px')
-        for name in ['welcome-image.png', 'installation-image.png']:
+        self.assertTrue(branding['welcomeExpandingLogo'])
+        self.assertIn('packagechooserq@boot', settings['sequence'][0]['show'])
+        choice = yaml.safe_load((config / 'modules/boot.conf').read_text())
+        self.assertEqual(choice['packageChoice'], 'grub')
+        self.assertTrue((config / 'branding/svent' / choice['qmlFilename']).is_file())
+        for name in ['welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'check.png', 'partial.png', 'radio.png']:
             self.assertTrue((config / 'branding/svent' / name).read_bytes().startswith(b'\x89PNG\r\n\x1a\n'))
+
+    def test_tool_rows_have_no_visible_package_child(self):
+        for selected in (True, False):
+            item = self.launcher.tool_item('sv-example', 'Example', 'Example description', selected)
+            self.assertEqual(item['selected'], selected)
+            self.assertNotIn('packages', item)
+            self.assertEqual([child for child in item['subgroups'] if not child.get('hidden')], [])
+            payload = item['subgroups'][0]
+            self.assertTrue(payload['selected'])
+            self.assertEqual(payload['packages'], ['sv-example'])
+            self.assertEqual(payload['hidden'] and payload['selected'] and item['selected'], selected)
 
     def test_dependency_failure_stops_before_partitioning(self):
         root = self.directory()
