@@ -168,6 +168,7 @@ def main():
     progress.wait()
     os.environ['QT_QPA_PLATFORM'] = 'xcb'
     os.environ['QT_QUICK_BACKEND'] = 'software'
+    os.environ['PATH'] = '/usr/libexec/svent/url-openers:' + os.environ.get('PATH', '/usr/sbin:/usr/bin:/sbin:/bin')
     with Path('/var/log/svent-calamares.log').open('w') as log:
         return subprocess.call(['/usr/bin/calamares', '-style', 'fusion'], stdout=log, stderr=subprocess.STDOUT)
 

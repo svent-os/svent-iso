@@ -53,13 +53,13 @@ class InstallerTests(unittest.TestCase):
         return path
 
     def test_all_desktops_and_bootloader_choices(self):
-        for desktop in ['xfce', 'bspwm', 'both', 'none']:
+        for desktop in ['xfce', 'bspwm', 'none']:
             for boot in ['grub', 'none']:
                 with self.subTest(desktop=desktop, boot=boot):
                     packages, metas = self.module.selection([{'install': ['tree', 'sv-alpha']}], self.metadata, desktop, boot, 'bios')
                     self.assertIn('sv-firefox-config', packages)
-                    self.assertEqual('svent-xfce' in packages, desktop in ('xfce', 'both'))
-                    self.assertEqual('svent-bspwm' in packages, desktop in ('bspwm', 'both'))
+                    self.assertEqual('svent-xfce' in packages, desktop == 'xfce')
+                    self.assertEqual('svent-bspwm' in packages, desktop == 'bspwm')
                     self.assertEqual('grub-pc' in packages, boot == 'grub')
                     self.assertEqual(metas, [])
 
@@ -89,7 +89,8 @@ class InstallerTests(unittest.TestCase):
         (home / '.config/picom/picom.conf').write_text('backend = "glx";\n')
         vm = self.launcher.virtualization('vmware', lambda name: True)
         with patch.object(self.module.os, 'chown', create=True):
-            self.module.guest_integration(root, vm, 'both')
+            self.module.guest_integration(root, vm, 'xfce')
+            self.module.guest_integration(root, vm, 'bspwm')
         xml = ET.parse(home / '.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml')
         self.assertEqual(xml.find(".//property[@name='use_compositing']").get('value'), 'false')
         self.assertIn('backend = "xrender";', (home / '.config/picom/picom.conf').read_text())
@@ -116,10 +117,14 @@ class InstallerTests(unittest.TestCase):
         (home / 'Desktop/personal.txt').write_text('keep')
         (root / 'etc/sudoers.d').mkdir()
         (root / 'etc/sudoers.d/svent-live').write_text('live')
+        opener = root / 'usr/libexec/svent/url-openers/xdg-open'
+        opener.parent.mkdir(parents=True)
+        opener.write_text('live browser opener')
         self.module.clean_live(root, 'xfce')
         self.assertTrue((home / 'Desktop/personal.txt').exists())
         self.assertFalse((home / 'Desktop/svent-install.desktop').exists())
         self.assertFalse((root / 'etc/sudoers.d/svent-live').exists())
+        self.assertFalse(opener.parent.exists())
         with self.assertRaises(RuntimeError):
             self.module.remove(root, '../outside/file')
 
@@ -136,13 +141,34 @@ class InstallerTests(unittest.TestCase):
         self.assertIn('svent-live', users['user']['forbidden_names'])
         self.assertEqual(branding['windowSize'], '960px,600px')
         self.assertTrue(branding['welcomeExpandingLogo'])
-        self.assertIn('packagechooserq@boot', settings['sequence'][0]['show'])
+        self.assertIn('packagechooser@boot', settings['sequence'][0]['show'])
         choice = yaml.safe_load((config / 'modules/boot.conf').read_text())
-        self.assertEqual(choice['packageChoice'], 'grub')
-        self.assertFalse(choice['qmlFilename'].endswith('.qml'))
-        self.assertTrue((config / 'branding/svent' / (choice['qmlFilename'] + '.qml')).is_file())
-        for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'check.png', 'partial.png', 'radio.png']:
+        self.assertEqual(choice['default'], 'grub')
+        self.assertEqual([item['id'] for item in choice['items']], ['grub', 'none'])
+        desktop = yaml.safe_load((config / 'modules/desktop.conf').read_text())
+        self.assertEqual([item['id'] for item in desktop['items']], ['xfce', 'bspwm', 'none'])
+        for item in choice['items']:
+            self.assertTrue((config / 'branding/svent' / item['screenshot']).is_file())
+        for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'grub-preview.png', 'check.png', 'partial.png', 'radio.png']:
             self.assertTrue((config / 'branding/svent' / name).read_bytes().startswith(b'\x89PNG\r\n\x1a\n'))
+
+    def test_combined_desktop_is_no_longer_allowed(self):
+        with self.assertRaises(RuntimeError):
+            self.module.selection([], self.metadata, 'both', 'grub', 'bios')
+
+    def test_support_browser_runs_as_live_user(self):
+        account = types.SimpleNamespace(pw_uid=1000, pw_name='svent-live', pw_dir='/home/svent-live')
+        with patch.dict(sys.modules, {'pwd': types.SimpleNamespace(getpwnam=lambda name: account)}):
+            helper = load(INCLUDE / 'usr/libexec/svent/url-openers/xdg-open', 'support_test')
+        url = 'https://discord.gg/4nnsYWjbUk'
+        with patch.object(helper.os, 'geteuid', return_value=0, create=True), patch.dict(helper.os.environ, {'DISPLAY': ':0', 'XAUTHORITY': '/home/svent-live/.Xauthority'}):
+            command = helper.browser_command(url)
+        self.assertEqual(command[:5], ['/usr/sbin/runuser', '-u', 'svent-live', '--', '/usr/bin/env'])
+        self.assertIn('HOME=/home/svent-live', command)
+        self.assertIn('DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus', command)
+        self.assertEqual(command[-3:], ['/usr/bin/firefox-esr', '--new-tab', url])
+        with self.assertRaises(ValueError):
+            helper.browser_command('file:///etc/passwd')
 
     def test_tool_rows_have_no_visible_package_child(self):
         for selected in (True, False):

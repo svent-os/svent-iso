@@ -17,6 +17,7 @@ mkdir -p /home/svent-live/Desktop
 install -m 0755 /usr/share/applications/svent-install.desktop /home/svent-live/Desktop/svent-install.desktop
 chmod 0755 /usr/libexec/svent/prepare-install-launcher
 chmod 0755 /usr/local/bin/svent-install
+chmod 0755 /usr/libexec/svent/url-openers/xdg-open
 desktop-file-validate /usr/share/applications/svent-install.desktop
 desktop-file-validate /etc/skel/.config/autostart/svent-install-launcher.desktop
 python3 - <<'PY'
@@ -28,12 +29,12 @@ config = Path('/etc/calamares')
 for path in config.rglob('*'):
     if path.suffix in ('.conf', '.desc'):
         yaml.safe_load(path.read_text())
-for name in ['welcome', 'locale', 'keyboard', 'packagechooser', 'packagechooserq', 'netinstall', 'partition', 'users', 'summary', 'mount', 'unpackfs', 'machineid', 'fstab', 'localecfg', 'hwclock', 'grubcfg', 'bootloader', 'umount', 'finished']:
+for name in ['welcome', 'locale', 'keyboard', 'packagechooser', 'netinstall', 'partition', 'users', 'summary', 'mount', 'unpackfs', 'machineid', 'fstab', 'localecfg', 'hwclock', 'grubcfg', 'bootloader', 'umount', 'finished']:
     assert any((Path(folder) / name / 'module.desc').is_file() for folder in ['/usr/lib/x86_64-linux-gnu/calamares/modules', '/usr/lib/calamares/modules']), name
-for path in [Path('/usr/local/bin/svent-install'), config / 'modules/sventinstall/main.py']:
+for path in [Path('/usr/local/bin/svent-install'), Path('/usr/libexec/svent/url-openers/xdg-open'), config / 'modules/sventinstall/main.py']:
     ast.parse(path.read_text())
 json.loads(Path('/usr/share/svent/installer/descriptions.json').read_text())
-for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'show.qml', 'bootloader.qml', 'check.png', 'partial.png', 'radio.png']:
+for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'grub-preview.png', 'show.qml', 'check.png', 'partial.png', 'radio.png']:
     assert (config / 'branding/svent' / name).is_file(), name
 PY
 python3 - <<'PY'

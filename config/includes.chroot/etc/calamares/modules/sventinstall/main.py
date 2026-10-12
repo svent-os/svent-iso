@@ -23,6 +23,7 @@ LIVE_FILES = [
     'etc/systemd/system/multi-user.target.wants/svent-live-shutdown.service',
     'usr/libexec/svent/prepare-live-shutdown',
     'usr/libexec/svent/prepare-install-launcher',
+    'usr/libexec/svent/url-openers',
     'usr/local/bin/svent-install',
     'usr/share/applications/svent-install.desktop',
     'usr/share/svent/installer']
@@ -72,7 +73,7 @@ def prepare(root, resolver=Path('/etc/resolv.conf')):
 
 
 def selection(operations, metadata, desktop, boot, firmware):
-    if desktop not in ('xfce', 'bspwm', 'both', 'none') or boot not in ('grub', 'none'):
+    if desktop not in ('xfce', 'bspwm', 'none') or boot not in ('grub', 'none'):
         raise RuntimeError('Desktop or bootloader selection is invalid.')
     requested = set(metadata['mandatory'])
     allowed = set(metadata['mandatory']) | set(metadata['base'])
@@ -85,9 +86,9 @@ def selection(operations, metadata, desktop, boot, firmware):
                 raise RuntimeError('Unexpected package selection: ' + name)
             requested.add(name)
     extras = []
-    if desktop in ('xfce', 'both'):
+    if desktop == 'xfce':
         extras.append('svent-xfce')
-    if desktop in ('bspwm', 'both'):
+    if desktop == 'bspwm':
         extras.extend(['svent-bspwm', 'flameshot', 'pavucontrol', 'playerctl', 'brightnessctl', 'i3lock'])
     if desktop != 'none':
         extras.extend(['svent-login', 'lxdm', 'mousepad', 'thunar', 'gvfs', 'network-manager-gnome', 'libpam-gnome-keyring', 'gnome-keyring'])
@@ -178,7 +179,7 @@ def guest_integration(root, vm, desktop):
     if vm['kind'] != 'none' and desktop != 'none':
         homes = [root / 'etc/skel', root / 'root'] + [p for p in (root / 'home').iterdir() if p.is_dir() and not p.is_symlink()]
         for home in homes:
-            if desktop in ('xfce', 'both'):
+            if desktop == 'xfce':
                 path = path_in(root, str((home / '.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml').relative_to(root)))
                 if path.is_symlink():
                     continue
@@ -196,7 +197,7 @@ def guest_integration(root, vm, desktop):
                 owner = home.stat()
                 os.chown(path, owner.st_uid, owner.st_gid)
                 os.chown(path.parent, owner.st_uid, owner.st_gid)
-            if desktop in ('bspwm', 'both'):
+            if desktop == 'bspwm':
                 path = path_in(root, str((home / '.config/picom/picom.conf').relative_to(root)))
                 if path.is_symlink():
                     continue
@@ -210,7 +211,7 @@ def guest_integration(root, vm, desktop):
     for unit in vm['services']:
         if any((root / base / unit).is_file() for base in ['usr/lib/systemd/system', 'lib/systemd/system']):
             target('systemctl', 'enable', unit)
-    if desktop in ('bspwm', 'both'):
+    if desktop == 'bspwm':
         script = path_in(root, 'etc/X11/Xsession.d/95svent-guest')
         script.parent.mkdir(parents=True, exist_ok=True)
         script.write_text('''case "${DESKTOP_SESSION:-} ${XDG_CURRENT_DESKTOP:-}" in
@@ -319,7 +320,7 @@ def configure(root):
         autologin = libcalamares.globalstorage.value('autologinUser')
         if autologin:
             settings.set('base', 'autologin', autologin)
-        settings.set('base', 'session', '/usr/bin/startxfce4' if desktop in ('xfce', 'both') else '/usr/bin/bspwm')
+        settings.set('base', 'session', '/usr/bin/startxfce4' if desktop == 'xfce' else '/usr/bin/bspwm')
         with path.open('w') as output:
             settings.write(output)
         target('systemctl', 'enable', 'lxdm.service')
