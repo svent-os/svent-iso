@@ -49,3 +49,6 @@ gir1.2-xfconf-0
 fonts-dejavu-core
 open-vm-tools
 open-vm-tools-desktop
+calamares
+python3-yaml
+desktop-file-utils

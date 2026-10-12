@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
-for package in svent-core svent-artwork svent-xfce firefox-esr sv-firefox-config lxdm dbus-user-session libglib2.0-bin; do
+for package in svent-core svent-artwork svent-xfce firefox-esr sv-firefox-config lxdm dbus-user-session libglib2.0-bin calamares; do
     test "$(dpkg-query -W -f='${Status}' "$package")" = 'install ok installed'
 done
-for command in startxfce4 xfwm4 xfdesktop xfce4-panel gio; do
+for command in startxfce4 xfwm4 xfdesktop xfce4-panel gio calamares; do
     command -v "$command" >/dev/null
 done
 test -f /usr/lib/systemd/user/dbus.service
@@ -12,6 +12,13 @@ if ! id svent-live >/dev/null 2>&1; then
 fi
 printf '%s\n' 'svent-live:live' | chpasswd
 cp -a /etc/skel/. /home/svent-live/
+test -s /usr/share/svent/logo/logo.png
+cp /usr/share/svent/logo/logo.png /etc/calamares/branding/svent/logo.png
+mkdir -p /home/svent-live/Desktop
+install -m 0755 /usr/share/applications/svent-install.desktop /home/svent-live/Desktop/svent-install.desktop
+chmod 0755 /usr/libexec/svent/prepare-install-launcher
+desktop-file-validate /usr/share/applications/svent-install.desktop
+desktop-file-validate /etc/skel/.config/autostart/svent-install-launcher.desktop
 python3 - <<'PY'
 from pathlib import Path
 import configparser

@@ -1,0 +1,38 @@
+#!/usr/bin/python3
+import hashlib
+from pathlib import Path
+import shutil
+import subprocess
+import time
+
+
+def prepare():
+    if not Path('/run/live/medium').is_dir():
+        return
+    result = subprocess.run(['xdg-user-dir', 'DESKTOP'], check=True, capture_output=True, text=True, timeout=5)
+    desktop = Path(result.stdout.strip())
+    if not desktop.is_absolute() or desktop == Path.home():
+        desktop = Path.home() / 'Desktop'
+    desktop.mkdir(parents=True, exist_ok=True)
+    source = Path('/usr/share/applications/svent-install.desktop')
+    launcher = desktop / source.name
+    if launcher.is_symlink():
+        launcher.unlink()
+    if not launcher.exists() or launcher.read_bytes() != source.read_bytes():
+        shutil.copyfile(source, launcher)
+    launcher.chmod(0o755)
+    checksum = hashlib.sha256(launcher.read_bytes()).hexdigest()
+    for attempt in range(5):
+        try:
+            subprocess.run(['gio', 'set', '-t', 'string', str(launcher), 'metadata::xfce-exe-checksum', checksum], check=True, timeout=3)
+            result = subprocess.run(['gio', 'info', '-a', 'metadata::xfce-exe-checksum', str(launcher)], check=True, capture_output=True, text=True, timeout=3)
+            if checksum in result.stdout:
+                return
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            pass
+        time.sleep(1)
+    raise RuntimeError('Installer launcher trust could not be verified.')
+
+
+if __name__ == '__main__':
+    prepare()

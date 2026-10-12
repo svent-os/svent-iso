@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Install SventOS
+Exec=sudo -n /usr/bin/calamares -d
+Icon=/usr/share/svent/logo/logo.png
+Terminal=false
+StartupNotify=false
+Categories=System;

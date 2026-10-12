@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Prepare Installer Launcher
+Exec=/usr/libexec/svent/prepare-install-launcher
+OnlyShowIn=XFCE;
+NoDisplay=true
+StartupNotify=false

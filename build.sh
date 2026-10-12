@@ -12,6 +12,8 @@ bash -n build.sh
 grub-script-check config/bootloaders/grub-pc/grub.cfg
 sh -n auto/config config/hooks/normal/0200-live.hook.chroot
 python3 -c 'import ast; from pathlib import Path; ast.parse(Path("config/includes.chroot/usr/libexec/svent/prepare-live-shutdown").read_text())'
+python3 -c 'import ast; from pathlib import Path; ast.parse(Path("config/includes.chroot/usr/libexec/svent/prepare-install-launcher").read_text())'
+python3 -c 'import yaml; from pathlib import Path; root=Path("config/includes.chroot/etc/calamares"); [yaml.safe_load(p.read_text()) for p in root.rglob("*") if p.suffix in (".conf", ".desc")]; settings=yaml.safe_load((root/"settings.conf").read_text()); assert settings["sequence"] == [{"show": ["welcome"]}]'
 free=$(df -Pk . | awk 'NR == 2 {print $4}')
 test "$free" -ge 8388608 || { printf '%s\n' 'At least 8 GiB of free disk space is required.' >&2; exit 1; }
 chmod +x auto/config config/hooks/normal/0200-live.hook.chroot

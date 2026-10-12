@@ -1,0 +1,29 @@
+componentName: svent
+welcomeStyleCalamares: false
+welcomeExpandingLogo: false
+windowExpanding: noexpand
+windowSize: 800px,520px
+windowPlacement: center
+sidebar: widget
+navigation: none
+strings:
+  productName: SventOS
+  shortProductName: SventOS
+  version: rolling
+  shortVersion: rolling
+  versionedName: SventOS rolling
+  shortVersionedName: SventOS
+  bootloaderEntryName: SventOS
+  productUrl: https://sventos.zirov.net
+  supportUrl: https://discord.gg/4nnsYWjbUk
+  knownIssuesUrl: https://github.com/svent-os/svent-iso/issues
+  releaseNotesUrl: https://github.com/svent-os
+  donateUrl: ""
+images:
+  productIcon: logo.png
+  productLogo: logo.png
+style:
+  SidebarBackground: "#181d23"
+  SidebarText: "#d9dce2"
+  SidebarBackgroundCurrent: "#b82d50"
+  SidebarTextCurrent: "#ffffff"
