@@ -86,7 +86,7 @@ def selection(operations, metadata, desktop, boot, firmware):
                 if name not in allowed:
                     raise RuntimeError('Unexpected package selection: ' + name)
                 requested.add(name)
-    extras = []
+    extras = ['firmware-iwlwifi', 'firmware-realtek']
     if desktop == 'xfce':
         extras.append('svent-xfce')
     if desktop == 'bspwm':

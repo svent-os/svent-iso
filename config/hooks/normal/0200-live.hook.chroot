@@ -1,6 +1,6 @@
 #!/bin/sh
 set -eu
-for package in svent-core svent-artwork svent-xfce firefox-esr sv-firefox-config lxdm dbus-user-session libglib2.0-bin calamares; do
+for package in svent-core svent-artwork svent-xfce firefox-esr sv-firefox-config lxdm dbus-user-session libglib2.0-bin calamares firmware-iwlwifi firmware-realtek; do
     test "$(dpkg-query -W -f='${Status}' "$package")" = 'install ok installed'
 done
 for command in startxfce4 xfwm4 xfdesktop xfce4-panel gio calamares; do

@@ -1,4 +1,6 @@
 linux-image-amd64
+firmware-iwlwifi
+firmware-realtek
 systemd-sysv
 live-boot
 live-config
