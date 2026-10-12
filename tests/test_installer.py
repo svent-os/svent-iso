@@ -71,6 +71,25 @@ class InstallerTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             self.module.selection([{'install': ['unexpected']}], self.metadata, 'xfce', 'grub', 'bios')
 
+    def test_optional_native_operations_install_base_and_recon(self):
+        self.metadata['categories']['sv-tools-recon'] = ['sv-recon-alpha', 'sv-recon-beta']
+        operations = [
+            {'install': ['firefox-esr']},
+            {'try_install': ['openvpn', {'package': 'tree'}, 'sv-recon-alpha', 'sv-recon-beta']}
+        ]
+        packages, metas = self.module.selection(operations, self.metadata, 'xfce', 'grub', 'bios')
+        self.assertTrue({'openvpn', 'tree', 'sv-recon-alpha', 'sv-recon-beta', 'sv-tools-recon'} <= set(packages))
+        self.assertIn('sv-tools-recon', metas)
+        with self.assertRaises(RuntimeError):
+            self.module.selection([{'try_install': ['unexpected']}], self.metadata, 'xfce', 'grub', 'bios')
+
+    def test_missing_selected_packages_prevent_success(self):
+        root = self.directory()
+        (root / 'var/lib/dpkg/status').write_text('Package: tree\nStatus: install ok installed\n\nPackage: openvpn\nStatus: deinstall ok config-files\n')
+        self.module.verify_installed(root, ['tree'])
+        with self.assertRaisesRegex(RuntimeError, 'openvpn'):
+            self.module.verify_installed(root, ['tree', 'openvpn'])
+
     def test_virtual_machine_packages_are_conditional(self):
         vm = self.launcher.virtualization('vmware', lambda name: True)
         self.metadata['virtualization'] = vm
@@ -149,7 +168,8 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual([item['id'] for item in desktop['items']], ['xfce', 'bspwm', 'none'])
         for item in choice['items']:
             self.assertTrue((config / 'branding/svent' / item['screenshot']).is_file())
-        for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'grub-preview.png', 'check.png', 'partial.png', 'radio.png']:
+        self.assertEqual(choice['items'][1]['screenshot'], 'no-bootloader.png')
+        for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'grub-preview.png', 'no-bootloader.png', 'check.png', 'partial.png', 'radio.png']:
             self.assertTrue((config / 'branding/svent' / name).read_bytes().startswith(b'\x89PNG\r\n\x1a\n'))
 
     def test_combined_desktop_is_no_longer_allowed(self):
@@ -252,6 +272,7 @@ class InstallerTests(unittest.TestCase):
             cache['sv-tools-' + category] = types.SimpleNamespace(candidate=types.SimpleNamespace(dependencies=[dependency]))
         groups, metadata = self.launcher.generate(cache, {}, self.metadata['virtualization'])
         self.assertTrue(groups[0]['hidden'])
+        self.assertTrue(all(group['critical'] for group in groups))
         self.assertNotIn('firefox-esr', str(groups[1:]))
         self.assertIn('sv-web-future-tool', metadata['categories']['sv-tools-web'])
         cache['sv-wireless-future-tool'] = Package()

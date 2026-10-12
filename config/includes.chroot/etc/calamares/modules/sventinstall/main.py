@@ -80,11 +80,12 @@ def selection(operations, metadata, desktop, boot, firmware):
     for members in metadata['categories'].values():
         allowed.update(members)
     for operation in operations:
-        for item in operation.get('install', []):
-            name = item if isinstance(item, str) else item['package']
-            if name not in allowed:
-                raise RuntimeError('Unexpected package selection: ' + name)
-            requested.add(name)
+        for action in ('install', 'try_install'):
+            for item in operation.get(action, []):
+                name = item if isinstance(item, str) else item['package']
+                if name not in allowed:
+                    raise RuntimeError('Unexpected package selection: ' + name)
+                requested.add(name)
     extras = []
     if desktop == 'xfce':
         extras.append('svent-xfce')
@@ -116,6 +117,12 @@ def installed(root, packages):
         if match:
             available.add(match.group(1))
     return sorted(set(packages) & available)
+
+
+def verify_installed(root, packages):
+    missing = sorted(set(packages) - set(installed(root, packages)))
+    if missing:
+        raise RuntimeError('Selected packages are missing from the installed system: ' + ', '.join(missing))
 
 
 def validate_selection():
@@ -344,6 +351,7 @@ def configure(root):
     (root / 'etc/resolv.conf').symlink_to('/run/NetworkManager/resolv.conf')
     target('update-initramfs', '-u', '-k', 'all')
     target('apt-get', 'check')
+    verify_installed(root, requested)
     target('apt-get', 'clean')
     libcalamares.job.setprogress(0.95)
     record = path_in(root, 'var/lib/svent/installation.json')

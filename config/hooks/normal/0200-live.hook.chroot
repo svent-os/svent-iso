@@ -34,7 +34,7 @@ for name in ['welcome', 'locale', 'keyboard', 'packagechooser', 'netinstall', 'p
 for path in [Path('/usr/local/bin/svent-install'), Path('/usr/libexec/svent/url-openers/xdg-open'), config / 'modules/sventinstall/main.py']:
     ast.parse(path.read_text())
 json.loads(Path('/usr/share/svent/installer/descriptions.json').read_text())
-for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'grub-preview.png', 'show.qml', 'check.png', 'partial.png', 'radio.png']:
+for name in ['logo.png', 'welcome-image.png', 'installation-image.png', 'xfce-desktop.png', 'bspwm-desktop.png', 'grub-preview.png', 'no-bootloader.png', 'show.qml', 'check.png', 'partial.png', 'radio.png']:
     assert (config / 'branding/svent' / name).is_file(), name
 PY
 python3 - <<'PY'

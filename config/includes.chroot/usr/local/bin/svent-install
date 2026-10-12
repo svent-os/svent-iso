@@ -112,7 +112,7 @@ def generate(cache, descriptions, vm):
         if package != 'obsidian':
             candidate(cache, package)
         base.append(tool_item(package, name, description, True))
-    groups.append({'name': 'Desktop Base', 'description': 'Everyday applications, VPN and command-line utilities.', 'selected': True, 'subgroups': base})
+    groups.append({'name': 'Desktop Base', 'description': 'Everyday applications, VPN and command-line utilities.', 'selected': True, 'critical': True, 'subgroups': base})
     metadata = {'mandatory': MANDATORY, 'base': [p for p, _, _ in BASE], 'categories': {}, 'virtualization': vm}
     for category, title, description in categories(cache):
         meta = 'sv-tools-' + category
@@ -124,7 +124,7 @@ def generate(cache, descriptions, vm):
             data = descriptions.get(package, {})
             summary = re.sub(r'^Svent\s+.*?\btool:\s*', '', version.summary, flags=re.I)
             items.append(tool_item(package, data.get('name', package.removeprefix('sv-')), data.get('description', summary), False))
-        groups.append({'name': title, 'description': description, 'selected': False, 'subgroups': items})
+        groups.append({'name': title, 'description': description, 'selected': False, 'critical': True, 'subgroups': items})
     return groups, metadata
 
 
