@@ -1,0 +1,78 @@
+#!/bin/sh
+set -eu
+for package in svent-core svent-artwork svent-xfce firefox-esr sv-firefox-config lxdm dbus-user-session libglib2.0-bin; do
+    test "$(dpkg-query -W -f='${Status}' "$package")" = 'install ok installed'
+done
+for command in startxfce4 xfwm4 xfdesktop xfce4-panel gio; do
+    command -v "$command" >/dev/null
+done
+test -f /usr/lib/systemd/user/dbus.service
+if ! id svent-live >/dev/null 2>&1; then
+    useradd --create-home --shell /bin/zsh --groups audio,video,plugdev,netdev,sudo svent-live
+fi
+printf '%s\n' 'svent-live:live' | chpasswd
+cp -a /etc/skel/. /home/svent-live/
+python3 - <<'PY'
+from pathlib import Path
+import configparser
+import io
+import xml.etree.ElementTree as ET
+home = Path('/home/svent-live')
+config = home / '.config/xfce4/xfconf/xfce-perchannel-xml'
+config.mkdir(parents=True, exist_ok=True)
+def update(channel, values):
+    path = config / (channel + '.xml')
+    tree = ET.parse(path) if path.exists() else ET.ElementTree(ET.Element('channel', name=channel, version='1.0'))
+    for name, kind, value in values:
+        parent = tree.getroot()
+        parts = name.split('/')
+        for part in parts[:-1]:
+            child = parent.find("property[@name='" + part + "']")
+            if child is None:
+                child = ET.SubElement(parent, 'property', name=part, type='empty')
+            parent = child
+        node = parent.find("property[@name='" + parts[-1] + "']")
+        if node is None:
+            node = ET.SubElement(parent, 'property', name=parts[-1])
+        node.set('type', kind)
+        node.set('value', value)
+    ET.indent(tree)
+    tree.write(path, encoding='utf-8', xml_declaration=True)
+update('xfwm4', [('general/use_compositing', 'bool', 'false')])
+update('xfce4-power-manager', [("xfce4-power-manager/" + name, kind, value) for name, kind, value in [('dpms-enabled','bool','false'),('inactivity-on-ac','uint','0'),('inactivity-on-battery','uint','0'),('lock-screen-suspend-hibernate','bool','false')]])
+autostart = home / '.config/autostart'
+autostart.mkdir(parents=True, exist_ok=True)
+for name in ['xfce4-screensaver', 'light-locker']:
+    (autostart / (name + '.desktop')).write_text('[Desktop Entry]\nType=Application\nHidden=true\n')
+path = Path('/etc/lxdm/lxdm.conf')
+settings = configparser.ConfigParser(interpolation=None, strict=False)
+settings.read(path)
+if not settings.has_section('base'):
+    settings.add_section('base')
+settings.set('base', 'autologin', 'svent-live')
+settings.set('base', 'session', '/usr/bin/startxfce4')
+out = io.StringIO()
+settings.write(out)
+path.write_text(out.getvalue())
+PY
+chown -R svent-live:svent-live /home/svent-live
+printf '%s\n' 'svent-live ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/svent-live
+chmod 0440 /etc/sudoers.d/svent-live
+visudo -cf /etc/sudoers.d/svent-live
+mkdir -p /etc/systemd/system/lxdm.service.d /etc/systemd/logind.conf.d /etc/live/config.conf.d
+printf '[Unit]\nAfter=live-config.service\n' > /etc/systemd/system/lxdm.service.d/10-live.conf
+printf '[Login]\nIdleAction=ignore\nHandleLidSwitch=ignore\nHandleLidSwitchExternalPower=ignore\nHandleLidSwitchDocked=ignore\n' > /etc/systemd/logind.conf.d/10-live.conf
+printf 'LIVE_USERNAME="svent-live"\nLIVE_USER_FULLNAME="SventOS Live"\nLIVE_X_SESSION_MANAGER="/usr/bin/startxfce4"\n' > /etc/live/config.conf.d/10-svent.conf
+printf '/usr/sbin/lxdm\n' > /etc/X11/default-display-manager
+ln -sfn /usr/bin/startxfce4 /etc/alternatives/x-session-manager
+systemctl enable lxdm.service
+systemctl set-default graphical.target
+for target in sleep.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target; do
+    systemctl mask "$target"
+done
+mkdir -p /home/svent-live/.config/autostart
+printf '[Desktop Entry]\nType=Application\nName=Live Display Settings\nExec=sh -c "xset s off; xset -dpms"\nOnlyShowIn=XFCE;\n' > /home/svent-live/.config/autostart/live-display.desktop
+chown svent-live:svent-live /home/svent-live/.config/autostart/live-display.desktop
+test -L /etc/systemd/system/display-manager.service
+test -x /etc/skel/.config/xfce4/xinitrc
+ldconfig
