@@ -75,4 +75,13 @@ printf '[Desktop Entry]\nType=Application\nName=Live Display Settings\nExec=sh -
 chown svent-live:svent-live /home/svent-live/.config/autostart/live-display.desktop
 test -L /etc/systemd/system/display-manager.service
 test -x /etc/skel/.config/xfce4/xinitrc
+mkdir -p /etc/modprobe.d /etc/systemd/system/run-live-medium.mount.d
+cat > /etc/modprobe.d/svent-vmware-smbus.conf <<'EOF'
+install i2c_piix4 /bin/sh -c 'if [ "$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null)" != "VMware, Inc." ]; then exec /sbin/modprobe --ignore-install i2c_piix4; fi'
+EOF
+printf '[Unit]\nDefaultDependencies=no\n' > /etc/systemd/system/run-live-medium.mount.d/10-live-shutdown.conf
+chmod 0755 /usr/libexec/svent/prepare-live-shutdown
+systemctl enable svent-live-shutdown.service
+test -x /usr/lib/systemd/systemd-shutdown
+update-initramfs -u -k all
 ldconfig

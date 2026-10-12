@@ -1,0 +1,33 @@
+#!/usr/bin/python3
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+
+
+def prepare(root=Path('/run/initramfs'), binary=Path('/usr/lib/systemd/systemd-shutdown')):
+    if (root / 'shutdown').exists():
+        return
+    result = subprocess.run(['ldd', str(binary)], check=True, capture_output=True, text=True)
+    if 'not found' in result.stdout:
+        raise RuntimeError('A shutdown library is missing.')
+    libraries = set(re.findall(r'(?:=>\s+|^\s*)(/[^\s()]+)', result.stdout, re.MULTILINE))
+    if not libraries:
+        raise RuntimeError('No shutdown libraries were found.')
+    root.mkdir(parents=True, exist_ok=True)
+    for folder in ['dev', 'proc', 'sys', 'run', 'oldroot', 'etc']:
+        (root / folder).mkdir(exist_ok=True)
+    for library in sorted(libraries):
+        destination = root / library.lstrip('/')
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(library, destination)
+    (root / 'etc/initrd-release').write_text('NAME="SventOS Live Shutdown"\n')
+    temporary = root / 'shutdown.new'
+    shutil.copy2(binary, temporary)
+    temporary.chmod(0o755)
+    os.replace(temporary, root / 'shutdown')
+
+
+if __name__ == '__main__':
+    prepare()

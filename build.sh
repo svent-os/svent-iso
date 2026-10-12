@@ -10,6 +10,7 @@ exec 9>.build.lock
 flock -n 9 || { printf '%s\n' 'Another build is running.' >&2; exit 1; }
 bash -n build.sh
 sh -n auto/config config/hooks/normal/0200-live.hook.chroot
+python3 -c 'import ast; from pathlib import Path; ast.parse(Path("config/includes.chroot/usr/libexec/svent/prepare-live-shutdown").read_text())'
 free=$(df -Pk . | awk 'NR == 2 {print $4}')
 test "$free" -ge 8388608 || { printf '%s\n' 'At least 8 GiB of free disk space is required.' >&2; exit 1; }
 chmod +x auto/config config/hooks/normal/0200-live.hook.chroot

@@ -1,0 +1,13 @@
+[Unit]
+Description=Prepare SventOS live shutdown in RAM
+ConditionPathExists=/run/live/medium
+After=local-fs.target
+Before=lxdm.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/svent/prepare-live-shutdown
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
