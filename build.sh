@@ -9,6 +9,7 @@ done
 exec 9>.build.lock
 flock -n 9 || { printf '%s\n' 'Another build is running.' >&2; exit 1; }
 bash -n build.sh
+sh -n config/includes.chroot/usr/local/bin/ntpdate
 grub-script-check config/bootloaders/grub-pc/grub.cfg
 sh -n auto/config config/hooks/normal/0200-live.hook.chroot
 python3 -c 'import ast; from pathlib import Path; ast.parse(Path("config/includes.chroot/usr/libexec/svent/prepare-live-shutdown").read_text())'

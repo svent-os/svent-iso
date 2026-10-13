@@ -18,6 +18,7 @@ CATEGORIES = [
     ('c2', 'C2 Frameworks', 'Operator clients, teamservers and command and control platforms.'),
     ('exploitation', 'Exploitation Tools', 'Exploit research, framework runtimes and payload development.')]
 BASE = [
+    ('ntpsec-ntpdate', 'NTP Time Sync', 'Query or synchronize the system clock with an NTP server.'),
     ('openvpn', 'OpenVPN', 'Connect to VPN networks.'),
     ('network-manager-openvpn-gnome', 'VPN Settings', 'Manage OpenVPN connections from the desktop.'),
     ('tree', 'Tree', 'Display directory structures.'),

@@ -19,6 +19,7 @@ nano
 mousepad
 iproute2
 iputils-ping
+ntpsec-ntpdate
 procps
 pciutils
 usbutils
