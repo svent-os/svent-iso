@@ -270,6 +270,15 @@ def clean_live(root, desktop):
     remove(root, 'var/lib/svent-login/state.json')
 
 
+def initialize_file_index(root):
+    if not installed(root, ['plocate']):
+        return
+    target('updatedb')
+    if any((root / base / 'plocate-updatedb.timer').is_file()
+           for base in ('usr/lib/systemd/system', 'lib/systemd/system')):
+        target('systemctl', 'enable', 'plocate-updatedb.timer')
+
+
 def configure(root):
     metadata = json.loads(Path('/run/svent-installer/metadata.json').read_text())
     desktop = libcalamares.globalstorage.value('packagechooser_desktop')
@@ -362,6 +371,7 @@ def configure(root):
         saved_log = path_in(root, 'var/log/svent-installation.log')
         shutil.copyfile(log, saved_log)
         saved_log.chmod(0o600)
+    initialize_file_index(root)
     libcalamares.job.setprogress(1.0)
 
 

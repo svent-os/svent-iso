@@ -52,6 +52,22 @@ class InstallerTests(unittest.TestCase):
         self.addCleanup(shutil.rmtree, path)
         return path
 
+    def test_file_index_is_created_in_target_with_timer_enabled(self):
+        root = self.directory()
+        (root / 'var/lib/dpkg/status').write_text('Package: plocate\nStatus: install ok installed\n')
+        unit = root / 'usr/lib/systemd/system/plocate-updatedb.timer'
+        unit.parent.mkdir(parents=True)
+        unit.write_text('')
+        self.module.initialize_file_index(root)
+        self.assertEqual([call[3:] for call in self.calls],
+                         [['updatedb'], ['systemctl', 'enable', 'plocate-updatedb.timer']])
+
+    def test_file_index_is_optional_when_plocate_was_not_selected(self):
+        root = self.directory()
+        (root / 'var/lib/dpkg/status').write_text('')
+        self.module.initialize_file_index(root)
+        self.assertEqual(self.calls, [])
+
     def test_all_desktops_and_bootloader_choices(self):
         for desktop in ['xfce', 'bspwm', 'none']:
             for boot in ['grub', 'none']:
